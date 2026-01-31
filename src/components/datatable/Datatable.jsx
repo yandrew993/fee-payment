@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -10,6 +10,7 @@ import { DarkModeContext } from "../../context/darkModeContext";
 
 import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import { CircularProgress } from "@mui/material";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { downloadPDFFromURL } from "../../lib/pdfService";
 import { AuthContext } from "../../context/AuthContext";
 import { canDelete, canCreate } from "../../lib/rbac";
@@ -137,7 +138,7 @@ const Datatable = ({ columns, api, searchQueryProp }) => {
             onClick={() => handleDownloadPDF(params.row.id, path === 'fee-payments' ? 'payment' : 'statement')}
             title="Download PDF"
           >
-            <DownloadIcon style={{ fontSize: '16px', marginRight: '4px' }} />
+            <FileDownloadIcon style={{ fontSize: '16px', marginRight: '4px' }} />
             PDF
           </button>
         )}
