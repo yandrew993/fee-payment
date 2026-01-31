@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connectivity Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+        }
+        
+        .test-item {
+            background: #f5f5f5;
+            border-left: 4px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-item:hover {
+            background: #eee;
+        }
+        
+        .test-item.testing {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+        
+        .test-item.success {
+            border-left-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .test-item.error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .status-icon {
+            font-size: 24px;
+            min-width: 30px;
+        }
+        
+        .test-info {
+            flex: 1;
+        }
+        
+        .test-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .test-url {
+            font-size: 12px;
+            color: #999;
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+        
+        .test-status {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .summary {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .summary-count {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .summary-text {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .config-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .config-info-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Backend Connectivity Test</h1>
+        <p class="subtitle">Test if your frontend can reach the backend APIs</p>
+        
+        <div class="test-section">
+            <div class="test-item testing" id="express">
+                <div class="status-icon">⏳</div>
+                <div class="test-info">
+                    <div class="test-name">Express API (Local)</div>
+                    <div class="test-url">http://localhost:3000/api</div>
+                    <div class="test-status">Waiting to test...</div>
+                </div>
+            </div>
+            
+            <div class="test-item testing" id="php">
+                <div class="status-icon">⏳</div>
+                <div class="test-info">
+                    <div class="test-name">PHP API (Production)</div>
+                    <div class="test-url">https://surewaygroupofschools.org/api</div>
+                    <div class="test-status">Waiting to test...</div>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="runTests()">Run Tests</button>
+        
+        <div class="summary" id="summary" style="display: none;">
+            <div class="summary-title">Test Results</div>
+            <div class="summary-count"><span id="working">0</span>/<span id="total">2</span></div>
+            <div class="summary-text" id="summary-text"></div>
+        </div>
+        
+        <div class="config-info">
+            <div class="config-info-title">📋 Current Configuration</div>
+            <div>REACT_APP_API_URL: <span id="env-url">Not detected</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Display current environment
+        document.getElementById('env-url').textContent = 
+            process.env?.REACT_APP_API_URL || 'https://surewaygroupofschools.org/api (fallback)';
+
+        async function testBackend(elementId, name, url) {
+            const element = document.getElementById(elementId);
+            const icon = element.querySelector('.status-icon');
+            const status = element.querySelector('.test-status');
+            
+            icon.textContent = '⏳';
+            status.textContent = 'Testing...';
+            element.className = 'test-item testing';
+            
+            try {
+                const response = await fetch(url + '/health', {
+                    method: 'GET',
+                    timeout: 5000
+                });
+                
+                const data = await response.json();
+                
+                icon.textContent = '✅';
+                status.textContent = `Connected! (Status: ${response.status})`;
+                element.className = 'test-item success';
+                
+                return { success: true, status: response.status };
+            } catch (error) {
+                icon.textContent = '❌';
+                
+                let errorMsg = error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    errorMsg = 'Connection failed (CORS or network error)';
+                }
+                
+                status.textContent = errorMsg;
+                element.className = 'test-item error';
+                
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function runTests() {
+            const results = [];
+            
+            results.push(await testBackend('express', 'Express API', 'http://localhost:3000/api'));
+            await new Promise(r => setTimeout(r, 500)); // Small delay between tests
+            results.push(await testBackend('php', 'PHP API', 'https://surewaygroupofschools.org/api'));
+            
+            // Show summary
+            const working = results.filter(r => r.success).length;
+            const total = results.length;
+            
+            document.getElementById('working').textContent = working;
+            document.getElementById('total').textContent = total;
+            
+            let summaryText = '';
+            if (working === 0) {
+                summaryText = '⚠️ No backends are reachable. Check your configuration.';
+            } else if (working === 1) {
+                summaryText = '✓ One backend is working. Check which one above.';
+            } else {
+                summaryText = '✅ All backends are reachable! You\'re good to go.';
+            }
+            
+            document.getElementById('summary-text').textContent = summaryText;
+            document.getElementById('summary').style.display = 'block';
+        }
+        
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 500);
+        });
+    </script>
+</body>
+</html>
